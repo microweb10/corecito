@@ -90,7 +90,8 @@ async def main():
 
 
       elif coreNumberDecreased(account.core_number, deviated_core_number, account.min_core_number_decrease_percentage, account.max_core_number_decrease_percentage):
-        logger.logCoreNumberDecreased(decrease_percentage, missing, account.core_number_currency, account.base_currency, telegram)
+        if float(balances['core_number_currency_balance']['free']) > float(missing):
+          logger.logCoreNumberDecreased(decrease_percentage, missing, account.core_number_currency, account.base_currency, telegram)
         #Check is fiat is True to adjust messages format and tx_result var and 'missing' has to be divided by the sell_price
         if fiat:
           tx_result = round(missing / sell_price, account.max_decimals_sell)
@@ -98,12 +99,16 @@ async def main():
         else:
           tx_result = missing * buy_price
           tx_price = buy_price
-        logger.logBuyMissing(tx_result, account.base_currency, tx_price, missing, account.core_number_currency, telegram)
+        if float(balances['core_number_currency_balance']['free']) > float(missing):
+          logger.logBuyMissing(tx_result, account.base_currency, tx_price, missing, account.core_number_currency, telegram)
 
         # Buy missing base currency; ie. => in ETH_BTC pair, buy missing BTC => Sell ETH
         if (not config['safe_mode_on']):
           if fiat:
-            await account.order_market_buy(missing, tx_result)
+            if float(balances['core_number_currency_balance']['free']) > float(missing):
+              await account.order_market_buy(missing, tx_result)
+            else:
+              logger.info("Insufficient balance for purchase. Doing nothing ;)")
           else:
             await account.order_market_sell(missing)
 
