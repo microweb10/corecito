@@ -68,7 +68,8 @@ class Logger:
     self.logger.info(log_message)
     if telegram and telegram.notifications_on and telegram.notify_errors_on:
       if "insufficient balance" not in "{}".format(exception):
-        telegram.send(log_message)
+        if "Connection reset by peer" not in "{}".format(exception):
+          telegram.send(log_message)
 
 
 def setupLogger(log_filename):
