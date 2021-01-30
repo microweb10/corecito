@@ -32,8 +32,6 @@ class Logger:
   def logCoreNumberIncreased(self, increase_percentage, excess, core_number_currency, base_currency, telegram):
     log_message = f'Increased {increase_percentage:.2f}% - excess of {excess:.6f} {core_number_currency} denominated in {base_currency}'
     self.logger.info(log_message)
-    if telegram and telegram.notifications_on:
-      telegram.send(log_message)
 
   def logSellExcess(self, tx_result, base_currency, buy_price, excess, core_number_currency, telegram):
     log_message = f'\n\n>>> Selling: {tx_result:.6f} {base_currency} at {buy_price} to park an excess of {excess:.6f} {core_number_currency}\n'
@@ -44,8 +42,6 @@ class Logger:
   def logCoreNumberDecreased(self, decrease_percentage, missing, core_number_currency, base_currency, telegram):
     log_message = f'Decreased {decrease_percentage:.2f}% - missing {missing:.6f} {core_number_currency} denominated in {base_currency}'
     self.logger.info(log_message)
-    if telegram and telegram.notifications_on:
-      telegram.send(log_message)
 
   def logBuyMissing(self, tx_result, base_currency, buy_price, missing, core_number_currency, telegram):
     log_message = f'\n\n>>> Buying: {tx_result:.6f} {base_currency} at {buy_price} taking {missing:.6f} {core_number_currency} from reserves\n'
